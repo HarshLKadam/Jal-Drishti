@@ -40,7 +40,7 @@ export const operatorLogin = async (c: Context) => {
       );
     }
 
-    // 🔐 Operator-specific payload
+   
     const token = signJwt({
       operator_id: operator.operator_id,
       role: "OPERATOR",

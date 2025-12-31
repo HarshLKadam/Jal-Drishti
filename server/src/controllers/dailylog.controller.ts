@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
  */
 export const createDailyLog = async (c: Context) => {
   try {
-    // 🔐 operator id comes from auth middleware
+  
     const operatorId = c.get("operatorId");
 
     if (!operatorId) {
@@ -27,7 +27,7 @@ export const createDailyLog = async (c: Context) => {
       gps_lng,
     } = body;
 
-    // 🧪 Validation
+
     if (
       !pump_id ||
       !start_time ||
@@ -44,7 +44,7 @@ export const createDailyLog = async (c: Context) => {
       );
     }
 
-    // 🔎 Check pump exists
+   
     const pump = await prisma.pump.findUnique({
       where: { pump_id: Number(pump_id) },
     });
@@ -56,7 +56,7 @@ export const createDailyLog = async (c: Context) => {
       );
     }
 
-    // ⏱️ Time calculation
+   
     const start = new Date(start_time);
     const end = new Date(end_time);
 
@@ -70,10 +70,10 @@ export const createDailyLog = async (c: Context) => {
     const durationMs = end.getTime() - start.getTime();
     const hours = durationMs / (1000 * 60 * 60);
 
-    // 💧 Water usage (LITERS)
+    
     const usage_liters = hours * pump.flow_rate_lph;
 
-    // 📝 Create log
+  
     const log = await prisma.dailyLog.create({
       data: {
         operator_id: operatorId,
