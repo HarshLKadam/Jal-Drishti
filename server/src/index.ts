@@ -3,6 +3,7 @@ import adminOperatorRoutes from "./routes/admin.operator.route";
 import authRoutes from "./routes/auth.route";
 import operatorRoutes from "./routes/operator.route";   
 import dailyLogRoutes from "./routes/dailylog.route";
+import adminDashboardRoutes from "./routes/admin.dashboard.routes";
 
 const app = new Hono();
 
@@ -13,6 +14,8 @@ app.get("/", (c) => c.text("API running"));
 
 app.route("/auth", authRoutes);
 app.route("/admin", adminOperatorRoutes);
+app.route("/admin/dashboard", adminDashboardRoutes);
+
 
 //operator routes 
 app.route("/operator", operatorRoutes);
