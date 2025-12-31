@@ -1,5 +1,6 @@
 import { Context, Next } from "hono";
 import { verifyJwt } from "../lib/jwt";
+import { prisma } from "../lib/prisma";
 
 export const operatorAuthMiddleware = async (c: Context, next: Next) => {
   const authHeader = c.req.header("authorization");
@@ -13,10 +14,10 @@ export const operatorAuthMiddleware = async (c: Context, next: Next) => {
 
   try {
     const token = authHeader.split(" ")[1];
+
     const decoded = verifyJwt(token) as {
       operator_id: number;
       role: string;
-      village_id: number;
     };
 
     if (decoded.role !== "OPERATOR") {
@@ -26,11 +27,25 @@ export const operatorAuthMiddleware = async (c: Context, next: Next) => {
       );
     }
 
-  
-    c.set("operator", {
-      operator_id: decoded.operator_id,
-      village_id: decoded.village_id,
+   
+    const operator = await prisma.operator.findUnique({
+      where: { operator_id: decoded.operator_id },
+      select: {
+        operator_id: true,
+        name: true,
+        village_id: true,
+      },
     });
+
+    if (!operator) {
+      return c.json(
+        { success: false, message: "Operator not found" },
+        401
+      );
+    }
+
+
+    c.set("operator", operator);
 
     await next();
   } catch (err) {
