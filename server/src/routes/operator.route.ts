@@ -1,7 +1,6 @@
 import { Hono } from "hono";
-import { operatorLogin } from "../controllers/operator.controller";
+import { operatorLogin,createChangeRequest} from "../controllers/operator.controller";
 import { getPumpByQr } from "../controllers/pump.controller";
-import { createDailyLog } from "../controllers/dailylog.controller";
 import { operatorAuthMiddleware } from "../middleware/operator.auth.middleware";
 
 const operatorRoutes = new Hono();
@@ -12,6 +11,12 @@ operatorRoutes.get(
   operatorAuthMiddleware,
   getPumpByQr
 );
+operatorRoutes.post(
+  "/pump/change-request",
+  operatorAuthMiddleware,
+  createChangeRequest
+);
+
 
 
 export default operatorRoutes;

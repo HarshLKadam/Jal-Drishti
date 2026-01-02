@@ -2,9 +2,14 @@ import { Hono } from "hono";
 import { adminLogin } from "../controllers/auth.controller";
 import { addPump } from "../controllers/pump.controller";
 import { adminAuth } from "../middleware/auth.middleware";
+import { addTank, getAllTanks } from "../controllers/tank.controller";
+
 
 const authRoutes = new Hono();
 
 authRoutes.post("/admin/login", adminLogin);
-authRoutes.post("/admin/pumps", adminAuth, addPump);
+authRoutes.post("/admin/addpumps", adminAuth, addPump);
+authRoutes.post("/admin/addtanks", adminAuth, addTank);
+authRoutes.get("/admin/alltanks", adminAuth,getAllTanks );
+
 export default authRoutes;
