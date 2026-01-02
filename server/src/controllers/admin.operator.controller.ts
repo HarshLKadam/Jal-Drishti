@@ -7,7 +7,7 @@ export const registerOperator = async (c: Context) => {
     const { name, phone, username, password, village_id } =
       await c.req.json();
 
-    // 1. Basic validation
+    
     if (!name || !phone || !username || !password || !village_id) {
       return c.json(
         { error: true, message: "All fields are required" },
@@ -15,7 +15,6 @@ export const registerOperator = async (c: Context) => {
       );
     }
 
-    // 2. Check if username already exists
     const existing = await prisma.operator.findUnique({
       where: { username },
     });
@@ -27,7 +26,7 @@ export const registerOperator = async (c: Context) => {
       );
     }
 
-    // 3. Hash password
+    
     const password_hash = await bcrypt.hash(password, 10);
 
     // 4. Create operator

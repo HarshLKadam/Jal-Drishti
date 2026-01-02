@@ -1,23 +1,17 @@
 import { Context, Next } from "hono";
-import { verify } from "hono/jwt";
+import { verifyJwt } from "../lib/jwt";
 
-export const adminAuth = async (c: Context, next: Next) => {
-  try {
-    const token = c.req.header("authorization")?.replace("Bearer ", "");
-
-    if (!token) {
-      return c.json({ message: "Unauthorized" }, 401);
-    }
-
-    const payload = await verify(token, Bun.env.JWT_SECRET!);
-
-    if (payload.role !== "ADMIN") {
-      return c.json({ message: "Forbidden" }, 403);
-    }
-
-    c.set("admin", payload);
-    await next();
-  } catch {
-    return c.json({ message: "Invalid token" }, 401);
+export const adminAuth = async (c: Context, next: () => Promise<void>) => {
+  const auth = c.req.header("authorization");
+  if (!auth?.startsWith("Bearer ")) {
+    return c.json({ success: false, message: "Unauthorized" }, 401);
   }
+
+  const payload = verifyJwt(auth.split(" ")[1]);
+
+
+  c.set("admin", payload);
+  c.set("village_id", payload.village_id);
+
+  await next();
 };

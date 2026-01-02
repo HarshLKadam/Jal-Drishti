@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.route";
 import operatorRoutes from "./routes/operator.route";   
 import dailyLogRoutes from "./routes/dailylog.route";
 import adminDashboardRoutes from "./routes/admin.dashboard.routes";
+import residentRoutes from "./routes/resident.route";
 
 const app = new Hono();
 
@@ -22,6 +23,10 @@ app.route("/operator", operatorRoutes);
 
 //daily logs route 
 app.route("/operator/daily-log", dailyLogRoutes);
+
+// resident routes
+app.route("/resident", residentRoutes);
+
 
 export default {
   port: 4000,
